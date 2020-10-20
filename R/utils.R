@@ -134,6 +134,37 @@ utils.select_unassigned <- function(results){
   map(results,~.[-labeled_idx,])
 }
 
+
+utils.select_unassigned <- function(results){
+  assign_results <- results$assign_results
+  cluster_results <- results$cluster_results
+  if("label" %in% names(assign_results)){
+    assign_results1 <- select(assign_results,-label)
+    cluster_results1 <- select(cluster_results,-label)
+  }
+  labeled_idx_assign <- purrr::reduce(map(assign_results1,~which(.!='unassigned')),intersect)
+  labeled_idx_cluster <- purrr::reduce(map(cluster_results1,~which(!is.na(.))),intersect)
+  labeled_idx <- intersect(labeled_idx_assign, labeled_idx_cluster)
+  a = map(results,~.[-labeled_idx,])
+  b <- a$cluster_results
+  b$sc3 <- lapply(b$sc3,as.character)
+  b[is.na(b$sc3),]$sc3 <- map(b[is.na(b$sc3),]$sc3,~{return(999)}(.))
+  b$sc3 <- lapply(b$sc3,as.numeric)
+  b$sc3 <- unlist(b$sc3)
+  b$tscan <- lapply(b$tscan,as.character)
+  b[is.na(b$tscan),]$tscan <- map(b[is.na(b$tscan),]$tscan,~{return(999)}(.))
+  b$tscan <- lapply(b$tscan,as.numeric)
+  b$tscan <- unlist(b$tscan)
+  b[is.na(b$seurat),]$seurat <- map(b[is.na(b$seurat),]$seurat,~{return(999)}(.))
+  b$seurat <- lapply(b$seurat,as.character)
+  b$seurat <- lapply(b$seurat,as.numeric)
+  b$seurat <- unlist(b$seurat)
+  a$cluster_results <- NULL
+  a$cluster_results <- b
+  a
+}
+
+
 ###convert column into rownames
 utils.col2rowNames <- function(data,col){
   stopifnot(is(data,"data.frame"))

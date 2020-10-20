@@ -94,43 +94,30 @@ cluster.tscan <- function(data) {
 }
 
 ### SC3
-cluster.sc3 <- function(data, K) {
+cluster.sc3 <- function(data) {
   require(SC3)
-  
-}
-
-
-
-
-
-
-
-
-
-### clustering using SC3
-cluster.sc3 <- function(counts, K) {
-  require(SC3)
+  stopifnot(is(data,"SingleCellExperiment"))
   sce = SingleCellExperiment(
     assays = list(
-      counts = as.matrix(counts),
-      logcounts = log2(as.matrix(counts) + 1)
+      counts = as.matrix(counts(data)),
+      logcounts = log2(as.matrix(counts(data)) + 1)
     )
   )
+  m_config <- methods.config.sc3
   rowData(sce)$feature_symbol <- rownames(sce)
   sce = sce[!duplicated(rowData(sce)$feature_symbol), ]
   sce = sc3_prepare(sce)
-  if( missing(K) ) { ## estimate number of clusters
-    sce = sc3_estimate_k(sce)
-    K = metadata(sce)$sc3$k_estimation
-  }
-  
+  sce = sc3_estimate_k(sce)## estimate number of clusters
   sce = sc3_calc_dists(sce)
   sce = sc3_calc_transfs(sce)
-  sce = sc3_kmeans(sce, ks = K)
+  sce = sc3_kmeans(sce, ks = 8)
   sce = sc3_calc_consens(sce)
   colTb = colData(sce)[,1]
   return(colTb)
 }
+
+
+
 
 ### Monocle
 cluster.monocle <- function(counts, K) {
