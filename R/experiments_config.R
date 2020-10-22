@@ -1,17 +1,17 @@
 source('R/config.R')
 
 experiments.cluster.data <- list(simple_accuracy=datasets$PBMC, cell_number=datasets$PBMC, sequencing_depth=datasets$PBMC,
-                         cell_types=datasets$PBMC,batch_effects_no_free=datasets$pancreas, 
-                         batch_effects_free=batch_effects_free_datasets$pancreas)
+                                 cell_types=datasets$PBMC, batch_effects=datasets$pancreas)
 
 experiments.assign.data <- list(
   train_dataset=list(simple_accuracy=datasets$PBMC, cell_number=datasets$PBMC, sequencing_depth=datasets$PBMC,
-                     cell_types=datasets$PBMC),
+                     cell_types=datasets$PBMC, batch_effects=datasets$pancreas),
   test_dataset=list(simple_accuracy=datasets$PBMC, cell_number=datasets$PBMC, sequencing_depth=datasets$PBMC,
-                    cell_types=datasets$PBMC)
-  )
-  
+                    cell_types=datasets$PBMC, batch_effects=datasets$pancreas)
+)
+
 experiments.methods <- list(
+<<<<<<< HEAD
   simple_accuracy=list(cluster=c('seurat','tscan','sc3'),assign=c('scmap','chetah'),marker_gene_assign=c('cellassign')), 
   cell_number=list(cluster=c('seurat','tscan','sc3'),assign=c('scmap','chetah')),
   sequencing_depth=list(cluster=c('seurat','tscan','sc3'),assign=c('scmap','chetah')),
@@ -19,6 +19,13 @@ experiments.methods <- list(
   batch_effects=list(cluster=c('seurat','tscan','sc3'),assign=c('scmap','chetah'),marker_gene_assign=c('cellassign'),
                      cluster_batch_free=c('tscan'), assign_batch_free=c(), marker_gene_assign_batch_free=c('cellassign')
                      )
+=======
+  simple_accuracy=list(cluster=c('sc3'),assign=c('scmap','chetah')), 
+  cell_number=list(cluster=c('seurat','tscan','sc3'),assign=c('scmap','chetah')),
+  sequencing_depth=list(cluster=c('seurat','tscan','sc3'),assign=c('scmap','chetah','sc3')),
+  cell_types=list(cluster=c('sc3','seurat','tscan','cidr'),assign=c('scmap','chetah','garnet','cellassign')),
+  batch_effects=list(cluster=c('sc3','seurat','tscan','cidr'),assign=c('scmap','chetah','garnet','cellassign'))
+>>>>>>> 044efc4b926c84f64626f1194f2c76ab9e32716d
 )
 
 experiments.parameters <- list(
@@ -27,6 +34,10 @@ experiments.parameters <- list(
   cell_number=list(sample_num=c(100,200,400,700),cv=TRUE,cv_fold=5,metrics=c('ARI','AMI','FMI')),
   sequencing_depth=list(quantile=list(low=0.2,high=0.8),cv=TRUE,cv_fold=5,metrics=c('ARI','AMI','FMI')),
   cell_types=list(),
+<<<<<<< HEAD
   batch_effects=list(sample_num=NA,cv=FALSE,remove_batch=FALSE,metrics=c('ARI','AMI','FMI'),
                      marker_gene_file="pancreasMarkerGenes.csv")
+=======
+  batch_effects=list()
+>>>>>>> 044efc4b926c84f64626f1194f2c76ab9e32716d
 )

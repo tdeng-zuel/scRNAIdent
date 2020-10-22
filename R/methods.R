@@ -123,6 +123,7 @@ cluster.tscan <- function(data) {
 cluster.sc3 <- function(data) {
   require(SC3)
   stopifnot(is(data,"SingleCellExperiment"))
+<<<<<<< HEAD
   counts(data) <- as.matrix(counts(data))
   data <- logNormCounts(data)
   m_config <- methods.config.sc3
@@ -147,6 +148,29 @@ cluster.sc3 <- function(data) {
 
 
 
+
+
+
+=======
+  sce = SingleCellExperiment(
+    assays = list(
+      counts = as.matrix(counts(data)),
+      logcounts = log2(as.matrix(counts(data)) + 1)
+    )
+  )
+  m_config <- methods.config.sc3
+  rowData(sce)$feature_symbol <- rownames(sce)
+  sce = sce[!duplicated(rowData(sce)$feature_symbol), ]
+  sce = sc3_prepare(sce)
+  sce = sc3_estimate_k(sce)## estimate number of clusters
+  sce = sc3_calc_dists(sce)
+  sce = sc3_calc_transfs(sce)
+  sce = sc3_kmeans(sce, ks = 8)
+  sce = sc3_calc_consens(sce)
+  colTb = colData(sce)[,1]
+  return(colTb)
+}
+>>>>>>> 044efc4b926c84f64626f1194f2c76ab9e32716d
 
 
 
